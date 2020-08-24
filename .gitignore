@@ -1,3 +1,5 @@
+*.swp
+
 # Compiled Lua sources
 luac.out
 
@@ -30,7 +32,6 @@ luac.out
 *.so
 *.so.*
 *.dylib
-
 # Executables
 *.exe
 *.out
