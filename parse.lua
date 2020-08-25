@@ -159,10 +159,6 @@ local create_parser = function(input)
         return true, table.concat(buffer)
     end
 
-    function o:maybe( parser )
-        
-    end
-
     function o:zero_or_more( parser )
 
     end
