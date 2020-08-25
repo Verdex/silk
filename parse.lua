@@ -21,7 +21,7 @@ local create_parser = function(input)
     end
 
     function o:clear()
-        local i = string.match(self.input, "%s*()", self.index)
+        local i = string.match(self.input, "^%s*()", self.index)
         self.index = i
         return true
     end
