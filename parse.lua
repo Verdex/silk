@@ -79,7 +79,17 @@ local create_parser = function(input)
     end
 
     function o:parse_number()
-
+        local s, e = self:clear()
+        if not s then
+            return false, e
+        end
+        
+        local number, new_index = string.match(self.input, "^(%d*.?%d*)()", self.index) 
+        if not number then
+            return false, string.format("encountered '%s' but expected number", current())
+        end
+        self.index = new_index
+        return true, number 
     end
 
     function o:parse_string()
