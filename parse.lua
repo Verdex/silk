@@ -93,7 +93,70 @@ local create_parser = function(input)
     end
 
     function o:parse_string()
+        local s, e = self:clear()
+        if not s then
+            return false, e
+        end
 
+        local rp = self:create_restore()
+
+        s, e = self:expect('"')
+        if not s then
+            return false, e
+        end
+
+        local buffer = {}
+        local escape = false
+
+        while not is_end() do
+
+            if escape and current() == '\\' then
+                escape = false 
+                self.index = self.index + 1
+                buffer[#buffer+1] = '\\' 
+            elseif escape and current() == 'n' then
+                escape = false 
+                self.index = self.index + 1
+                buffer[#buffer+1] = '\n' 
+            elseif escape and current() == 'r' then
+                escape = false 
+                self.index = self.index + 1
+                buffer[#buffer+1] = '\r' 
+            elseif escape and current() == 't' then
+                escape = false 
+                self.index = self.index + 1
+                buffer[#buffer+1] = '\t' 
+            elseif escape and current() == '0' then
+                escape = false 
+                self.index = self.index + 1
+                buffer[#buffer+1] = '\0' 
+            elseif escape and current() == '"' then
+                escape = false 
+                self.index = self.index + 1
+                buffer[#buffer+1] = '\"' 
+            elseif current() == '\\' then
+                escape = true
+                self.index = self.index + 1
+            elseif current() == '"' then
+                break
+            elseif not escape then 
+                buffer[#buffer+1] = current()
+                self.index = self.index + 1
+            else 
+                return false, string.format("encountered unknown escape '%s'", current())
+            end
+        end
+        
+        if is_end() then
+            return false, "encountered end of file inside of string"
+        end
+
+        s, e = self:expect('"')
+        if not s then
+            return false, e
+        end
+            
+        return true, table.concat(buffer)
     end
 
     function o:maybe( parser )
