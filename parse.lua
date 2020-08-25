@@ -65,7 +65,17 @@ local create_parser = function(input)
     end
 
     function o:parse_symbol() 
+        local s, e = self:clear()
+        if not s then
+            return false, e
+        end
 
+        local symbol, new_index = string.match(self.input, "^([_%a][_%w]*)()", self.index) 
+        if not symbol then
+            return false, string.format("encountered '%s' but expected symbol", current())
+        end
+        self.index = new_index
+        return true, symbol
     end
 
     function o:parse_number()
