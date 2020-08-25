@@ -57,11 +57,38 @@ local create_parser = function(input)
         return true
     end
 
+    function o:parse_symbol() 
+
+    end
+
+    function o:parse_number()
+
+    end
+
+    function o:parse_string()
+
+    end
+
     function o:maybe( parser )
         
     end
 
-    
+    function o:zero_or_more( parser )
+
+    end
+   
+    function o:one_or_more( parser )
+
+    end
+
+    function o:list( parser )
+
+    end
+
+    function o:choice( parsers )
+
+    end
+
     return o
 end
 
