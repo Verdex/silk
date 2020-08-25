@@ -26,6 +26,13 @@ local create_parser = function(input)
         return true
     end
 
+    function o:expect_end()
+        if is_end() then
+            return true
+        end
+        return false
+    end
+
     function o:expect( str )
         local s, e = self:clear()
         if not s then
