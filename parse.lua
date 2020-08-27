@@ -84,7 +84,7 @@ local create_parser = function(input)
             return false, e
         end
         
-        local number, new_index = string.match(self.input, "^(%d*.?%d*)()", self.index) 
+        local number, new_index = string.match(self.input, "^(%d*%.?%d*)()", self.index) 
         if not number then
             return false, string.format("encountered '%s' but expected number", current())
         end
@@ -159,20 +159,109 @@ local create_parser = function(input)
         return true, table.concat(buffer)
     end
 
-    function o:zero_or_more( parser )
+    function o:maybe( parser )
+        local rp = self:create_restore()
 
+        local s, e = parser(self)
+        if not s then 
+            self:restore(rp)
+            return true, nil
+        end
+        return true, e
+    end
+
+    function o:seq( parsers )
+        local rp = self:create_restore()
+
+        local res = {}
+        for _, parser in ipairs(parsers) do
+            local s, e = parser(self)
+            if not s then
+                self:restore(rp)
+                return false, e
+            end
+            res[#res+1] = e
+        end
+        return true, res
+    end
+
+    function o:zero_or_more( parser )
+        local res = {}
+        while not is_end() do
+            local rp = self:create_restore()
+
+            local s, e = parser(self) 
+            if not s then
+                self:restore(rp)
+                return true, res
+            end
+            res[#res+1] = e
+        end
+        return true, res
     end
    
     function o:one_or_more( parser )
+        local rp = self:create_restore()
 
+        local res = {}
+        local s, e = parser(self) 
+        if not s then
+            self:restore(rp)
+            return false, e
+        end
+        res[#res+1] = e
+        while not is_end() do
+            rp = self:create_restore()
+            
+            s, e = parser(self) 
+            if not s then
+                self:restore(rp)
+                return true, res
+            end
+            res[#res+1] = e
+        end
+        return true, res
     end
 
     function o:list( parser )
+        local rp = self:create_restore()
 
+        local res = {}
+        local s, e = parser(self) 
+        if not s then
+            self:restore(rp)
+            return true, res
+        end
+        res[#res+1] = e
+        while not is_end() do
+            rp = self:create_restore()
+            s, e = self:expect(",")
+            if not s then
+                return true, res 
+            end
+            s, e = parser(self) 
+            if not s then
+                self:restore(rp)
+                return true, res
+            end
+            res[#res+1] = e
+        end
+        return true, res
     end
 
     function o:choice( parsers )
+        local errors = {}
+        for _, parser in ipairs(parsers) do
+            local rp = self:create_restore()
 
+            local s, e = parser(self)
+            if s then
+                return true, e
+            end
+            self:restore(rp)
+            errors[#errors+1] = e
+        end
+        return false, "choices failed to find parser: " .. table.concat(errors, "\n")
     end
 
     return o
