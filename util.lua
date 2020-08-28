@@ -30,64 +30,70 @@ local parse_number = function(p)
     return true, tonumber(e)
 end
 
-local parse_array = function(p)
-    local s, e = p:expect("[")
-    if not s then
-        return false, e
+local parse_array = function(parse_expr)
+    return function(p)
+        local s, e = p:expect("[")
+        if not s then
+            return false, e
+        end
+        s, e = p:list(parse_expr)
+        local array = e
+        if not s then
+            return false, e
+        end
+        s, e = p:expect("]")
+        if not s then
+            return false, e
+        end
+        return true, array 
     end
-    s, e = p:list(parse_expr)
-    local array = e
-    if not s then
-        return false, e
-    end
-    s, e = p:expect("]")
-    if not s then
-        return false, e
-    end
-    return true, array 
 end
 
-local parse_object = function(p)
-    function parse_slot(p)
+local parse_object = function(parse_expr)
+    local parse_slot = function(p)
         return p:seq { function(p) return p:parse_symbol() end
                      ; function(p) return p:expect("=") end
                      ; parse_expr
                      }
     end
 
-    print( 'blah') 
+    return function(p)
 
-    local s, e = p:expect("{")
-    if not s then 
-        return false, e
+        local s, e = p:expect("{")
+        if not s then 
+            return false, e
+        end
+
+        s, e = p:list(parse_slot)
+        local slots = e
+
+        if not s then 
+            return false, e
+        end
+
+        s, e = p:expect("}")
+        if not s then
+            return false, e
+        end
+
+        local obj = {}
+        for _, v in ipairs(slots) do
+            obj[v[1]] = v[2]
+        end
+
+        return true, obj
     end
-
-    s, e = p:zero_or_more(parse_slot)
-    local slots = e
-
-    if not s then 
-        return false, e
-    end
-
-    s, e = p:expect("}")
-    if not s then
-        return false, e
-    end
-
-    local obj = {}
-    for _, v in ipairs(slots) do
-        obj[v[1]] = v[3]
-    end
-
-    return true, obj
 end
 
-local parse_expr = function(p)
+local function parse_expr(p)
+    local rec = function(p)
+        return parse_expr(p)
+    end
     return p:choice{ parse_number 
                    ; function(p) return p:parse_string() end
                    ; parse_bool
-                   ; parse_array
-                   ; parse_object
+                   ; parse_array(rec)
+                   ; parse_object(rec)
                    }
 end
 

@@ -4,11 +4,11 @@ local create_parser = function(input)
     o.input = input
     o.index = 1
 
-    function is_end()
+    local is_end = function()
         return #o.input < o.index
     end
 
-    function current()
+    local current = function()
         return string.sub(o.input, o.index, o.index)
     end
 
@@ -84,7 +84,7 @@ local create_parser = function(input)
             return false, e
         end
         
-        local number, new_index = string.match(self.input, "^(%d*%.?%d*)()", self.index) 
+        local number, new_index = string.match(self.input, "^(%d+%.?%d*)()", self.index) 
         if not number then
             return false, string.format("encountered '%s' but expected number", current())
         end
