@@ -103,7 +103,20 @@ end
 
 local deserialize = function( str )
     local p = parse.create_parser(str)
-    return parse_expr(p)
+    local s, e = parse_expr(p)
+    if not s then
+        error( string.format( "deserialize encountered parse error: %s", e ) )
+    end
+    local expr = e
+    s, e = p:clear()
+    if not s then
+        error( string.format( "deserialize encountered clear error: %s", e ) )
+    end
+    s, e = p:expect_end()
+    if not s then
+        error( string.format( "deserialize encountered additional text: %s", e ) )
+    end
+    return expr
 end
 
 
