@@ -86,19 +86,37 @@ local parse_object = function(parse_expr)
 end
 
 local function parse_expr(p)
-    local rec = function(p)
-        return parse_expr(p)
-    end
     return p:choice{ parse_number 
                    ; function(p) return p:parse_string() end
                    ; parse_bool
-                   ; parse_array(rec)
-                   ; parse_object(rec)
+                   ; parse_array(parse_expr)
+                   ; parse_object(parse_expr)
                    }
 end
 
-local serialize = function( obj ) 
-    
+local function serialize( obj ) 
+    if type(obj) == 'boolean' then
+        return tostring(obj)
+    elseif type(obj) == 'number' then
+        return tostring(obj)
+    elseif type(obj) == 'string' then
+        return '"' .. obj .. '"'
+    elseif type(obj) == 'table' then
+        local array_items = {}
+        for k, v in ipairs(obj) do
+            array_items[#array_items + 1] = serialize( v )
+        end
+        if #array_items > 0 then
+            return "[ " .. table.concat( array_items, ", " ) .. " ]"
+        end
+        local items = {}
+        for k, v in pairs(obj) do
+            items[#items + 1] = string.format( "%s = %s", k, serialize( v ) )
+        end
+        return "{ " .. table.concat( items, ", " ) .. " }"
+    else
+        error( "encountered unsupported type in serialize: " .. type(obj) )
+    end
 end
 
 local deserialize = function( str )
