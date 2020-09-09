@@ -137,7 +137,6 @@ local deserialize = function( str )
     return expr
 end
 
-
 return { serialize = serialize
        ; deserialize = deserialize
        }
