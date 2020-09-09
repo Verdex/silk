@@ -1,7 +1,13 @@
 
+local repo = require 'repo'
+
+data = {}
 
 -- this only gets called once at the beginning
 function love.load()
+
+    data.draw = repo.create_standard()
+    data.update = repo.create_standard() 
 
 end
 
@@ -10,12 +16,20 @@ end
 -- time that the function was called
 function love.update(dt)
 
+    for _, v in data.update:iter() do
+        v.update(dt)     
+    end
+
 end
 
 -- this is the only function that the graphics functions
 -- will work in
 function love.draw()
-    
+   
+    for _, v in data.draw:iter() do
+
+    end
+
 end
 
 function love.mousepressed(x, y, button, istouch)
