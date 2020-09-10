@@ -16,8 +16,16 @@ end
 -- time that the function was called
 function love.update(dt)
 
+    local remove = {}
     for _, v in data.update:iter() do
         v.update(dt)     
+        if v.remove_update then
+            remove[#remove+1] = v.id
+        end
+    end
+
+    for _, v in ipairs(remove) do
+        data.update:remove_by_id(v)
     end
 
 end
@@ -26,8 +34,18 @@ end
 -- will work in
 function love.draw()
    
+    local remove = {}
     for _, v in data.draw:iter() do
+        if v.visible then
+            v.draw()
+        end
+        if v.remove_draw then
+            remove[#remove+1] = v.id 
+        end
+    end
 
+    for _, v in ipairs(remove) do
+        data.draw:remove_by_id(v)
     end
 
 end
