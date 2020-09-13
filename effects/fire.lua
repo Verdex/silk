@@ -31,17 +31,17 @@ local function create(x, y)
     end
 
     function obj:draw()
-        love.graphics.setColor(1.0, 1.0, 1.0)
+        love.graphics.setColor(1.0, 1.0, 1.0, 0.5)
         for k, v in ipairs(self.lengths) do
             love.graphics.line(self.x + k, self.y, self.x + k, self.y - v[1])
         end
 
-        love.graphics.setColor(1.0, 1.0, 0)
+        love.graphics.setColor(1.0, 1.0, 0, 0.5)
         for k, v in ipairs(self.lengths) do
             love.graphics.line(self.x + k, self.y, self.x + k, self.y - v[2])
         end
 
-        love.graphics.setColor(1.0, 0.5, 0)
+        love.graphics.setColor(1.0, 0.5, 0, 0.5)
         for k, v in ipairs(self.lengths) do
             love.graphics.line(self.x + k, self.y, self.x + k, self.y - v[3])
         end
