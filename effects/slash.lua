@@ -1,13 +1,18 @@
 
 local util = require 'util'
 
-local function create(x, y, radius)
+local south = 0
+local east = 1.571 
+local north = 3.14 
+local west = 4.71 
+
+local function create(x, y, radius, offset)
 
     local obj = { x = x
                 ; y = y
                 ; radius = radius
-                ; angle_1 = 0
-                ; angle_2 = 0.1
+                ; angle_1 = 0 - offset
+                ; angle_2 = 0.1 - offset
                 }
 
     obj.interface = 'slash'
@@ -18,7 +23,8 @@ local function create(x, y, radius)
     obj.id = util.gen_id()
 
     function obj:update(dt) 
-        if self.dt + dt < 0.01 then
+        --if self.dt + dt < 0.01 then
+        if self.dt + dt < 0.1 then
             self.dt = self.dt + dt 
         elseif self.step == 5 then
             self.remove_effect = true
@@ -43,4 +49,8 @@ local function create(x, y, radius)
 end
 
 return { create = create
+       ; north = north
+       ; south = south
+       ; west = west
+       ; east = east
        }
