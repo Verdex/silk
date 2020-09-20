@@ -25,8 +25,7 @@ local function create(draw, x_src, y_src, x_dest, y_dest, speed)
         self.distance = self.distance + d
         if self.distance > self.total_distance then
             self.visible = false
-            self.remove_effect = true
-            self.remove_update = true
+            self.dead = true
         end
     end
 

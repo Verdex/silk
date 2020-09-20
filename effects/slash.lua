@@ -27,8 +27,7 @@ local function create(x, y, radius, offset)
         if self.dt + dt < 0.1 then
             self.dt = self.dt + dt 
         elseif self.step == 5 then
-            self.remove_effect = true
-            self.remove_update = true
+            self.dead = true
         else
             local start_angle = (self.step - 1) / 10
             local end_angle = (self.step * 2) / 10

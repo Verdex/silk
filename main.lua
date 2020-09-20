@@ -54,7 +54,7 @@ function love.update(dt)
     local remove = {}
     for _, v in data.update:iter() do
         v:update(dt)     
-        if v.remove_update then
+        if v.dead then
             remove[#remove+1] = v.id
         end
     end
@@ -94,7 +94,7 @@ function love.draw()
         if v.visible then
             v:draw()
         end
-        if v.remove_draw then
+        if v.dead then
             rd[#rd+1] = v.id 
         end
     end
@@ -104,7 +104,7 @@ function love.draw()
         if v.visible then
             v:draw()
         end
-        if v.remove_effect then
+        if v.dead then
             re[#re+1] = v.id 
         end
     end
