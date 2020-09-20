@@ -18,7 +18,8 @@ local function create()
     end
 
     function obj:modify_location(x, y)
-        return x, y
+        local d = math.sin(self.dt)
+        return x + d, y
     end
 
     function obj:modify_color(r, g, b, a)
