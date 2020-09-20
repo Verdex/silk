@@ -23,7 +23,6 @@ local function path(x_src, y_src, x_dest, y_dest)
     end
 
     local slope = (y_dest - y_src) / (x_dest - x_src)
-    local length = distance(x_src, y_src, x_dest, y_dest)
     local constant = y_src - (x_src * slope)
 
     -- point slope: y - y1 = m(x - x1)
