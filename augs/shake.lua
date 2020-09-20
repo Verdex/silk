@@ -3,7 +3,7 @@ local util = require 'util'
 
 local function create()
 
-    local obj = { lifetime = 5 }
+    local obj = { lifetime = 0.3 }
 
     obj.interface = 'shake'
     obj.id = util.gen_id()
@@ -18,7 +18,7 @@ local function create()
     end
 
     function obj:modify_location(x, y)
-        local d = math.sin(self.dt)
+        local d = math.sin(self.dt * 75)
         return x + d, y
     end
 
