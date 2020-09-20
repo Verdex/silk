@@ -3,6 +3,8 @@ local function x()
     love.graphics.print("blarg", 200, 200)
 end
 
+--love.graphics.setNewFont(size)
+
 --love.math.random(4, 5)
 --love.graphics.setColor(1,2,3,4)
 --love.graphics.line(x, y, x, y)
