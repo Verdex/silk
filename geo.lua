@@ -7,36 +7,39 @@ local function distance(x1, y1, x2, y2)
     return math.pow(distance_square(x1, y1, x2, y2), 0.5)
 end
 
-local function path(x_src, y_src, x_dest, y_dest)
-
-    local x_distance = x_dest - x_src
-
-    -- vertical line
-    if x_distance == 0 then
-        local y_distance = y_dest - y_src
-
-        return function(d) 
-            local y_progress = (y_distance * d)
-            local y_value = y_progress + y_src
-            return { x = x_src, y = y_value } 
-        end
-    end
-
-    local slope = (y_dest - y_src) / (x_dest - x_src)
-    local constant = y_src - (x_src * slope)
-
-    -- point slope: y - y1 = m(x - x1)
-    -- y = m(x - x1) + y1
-    -- y = mx - x1m + y1
+local function vec_2d_path(v1, v2)
+    local v = { x = v2.x - v1.x
+              ; y = v2.y - v1.y
+              }
 
     return function(d)
-        local x_progress = (x_distance * d)
-        local x_value = x_progress + x_src
-        return { x = x_value, y = (slope * x_value) - constant }
-    end
+        local x = v.x * d
+        local y = v.y * d
+        return { x = x + v1.x
+               ; y = y + v1.y
+               }
+    end 
+end
+
+local function vec_3d_path(v1, v2)
+    local v = { x = v2.x - v1.x
+              ; y = v2.y - v1.y
+              ; z = v2.z - v1.z
+              }
+
+    return function(d)
+        local x = v.x * d
+        local y = v.y * d
+        local z = v.z * d
+        return { x = x + v1.x
+               ; y = y + v1.y
+               ; z = z + v1.z
+               }
+    end 
 end
 
 return { distance_square = distance_square
        ; distance = distance
-       ; path = path
+       ; vec_2d_path = vec_2d_path
+       ; vec_3d_path = vec_3d_path
        }
