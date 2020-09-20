@@ -2,9 +2,7 @@
 local repo = require 'repo'
 local util = require 'util'
 
-local fire = require 'effects/fire'
-local shield = require 'effects/shield'
-local slash = require 'effects/slash'
+local throw = require 'effects/throw'
 
 local geo = require 'geo'
 
@@ -18,6 +16,14 @@ function love.load()
     data.update = repo.create_standard() 
 
     color_path = geo.vec_3d_path({x = 0, y = 1, z = 0}, {x = 1, y = 0, z = 0})
+
+    local x = throw.create( function (x,y)
+        love.graphics.setColor(1, 1, 1)
+        love.graphics.circle('fill', x, y, 10, 10)
+    end, 0, 0, 100, 100, 30)
+
+    data.update:add(x)
+    data.effects:add(x)
 
 end
 
