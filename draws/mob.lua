@@ -20,13 +20,13 @@ local function create(character)
     obj.id = util.gen_id()
 
     function obj:draw()
-        love.graphics.setColor(aug_util.apply_color(self.augs, color_r, color_g, color_b, color_a))
+        love.graphics.setColor(aug_util.apply_color(self.augs, self.color_r, self.color_g, self.color_b, self.color_a))
         love.graphics.setNewFont(self.size)
         love.graphics.print(self.character, aug_util.apply_location(self.augs, self.x, self.y))
     end
 
     function obj:add_aug(aug)
-        self.augs[#self.aug+1] = aug
+        self.augs[#self.augs+1] = aug
     end
 
     return obj
