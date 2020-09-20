@@ -1,10 +1,12 @@
 
 local repo = require 'repo'
 local util = require 'util'
+local geo = require 'geo'
 
 local throw = require 'effects/throw'
+local mob = require 'draws/mob'
 
-local geo = require 'geo'
+local shake = require 'augs/shake'
 
 data = {}
 
@@ -25,6 +27,13 @@ function love.load()
     data.update:add(x)
     data.effects:add(x)
 
+    local m = mob.create('@') 
+    m.x = 300
+    m.y = 300
+
+    ID = m.id
+
+    data.draw:add(m)
 end
 
 blarg = 0
@@ -145,13 +154,16 @@ function love.mousereleased(x, y, button, istouch)
 end
 
 function love.keypressed(key)
+    local suc, target = data.draw:get_by_id(ID) 
+    local s = shake.create()
+    data.update:add(s)
+    target:add_aug(s)
 end
 
 function love.keyreleased(key)
 end
 
 function love.focus(in_focus)
-
 end
 
 function love.quit()
