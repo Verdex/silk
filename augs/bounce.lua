@@ -1,9 +1,9 @@
 
 local util = require 'util'
 
-local function create()
+local function create(lifetime)
 
-    local obj = { lifetime = 0.3 }
+    local obj = { lifetime = lifetime or 0.3 }
 
     obj.interface = 'bounce'
     obj.id = util.gen_id()
@@ -18,7 +18,7 @@ local function create()
     end
 
     function obj:modify_location(x, y)
-        local d = math.sin(self.dt * 50) * 4 
+        local d = math.sin(self.dt * 20) * 8 
         return x, y + d
     end
 

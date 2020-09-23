@@ -2,10 +2,10 @@
 local util = require 'util'
 local geo = require 'geo'
 
-local function create(direction)
+local function create(direction, lifetime, distance)
 
-    local obj = { lifetime = 0.3 
-                ; distance = 10
+    local obj = { lifetime = lifetime or 0.3 
+                ; distance = distance or 10
                 }
 
     obj.interface = 'shift'

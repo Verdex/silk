@@ -7,6 +7,10 @@ local throw = require 'effects/throw'
 local mob = require 'draws/mob'
 
 local shake = require 'augs/shake'
+local shift = require 'augs/shift'
+local bounce = require 'augs/bounce'
+
+local damage = require 'actions/damage'
 
 data = {}
 
@@ -77,7 +81,6 @@ end
 -- this is the only function that the graphics functions
 -- will work in
 function love.draw()
-
 
     love.graphics.clear()
 
@@ -155,9 +158,9 @@ end
 
 function love.keypressed(key)
     local suc, target = data.draw:get_by_id(ID) 
-    local s = shake.create()
-    data.update:add(s)
-    target:add_aug(s)
+
+    damage.at("999", {r = 1, g = 1, b = 1, a = 1}, target.x, target.y)
+    
 end
 
 function love.keyreleased(key)
